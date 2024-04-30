@@ -5,7 +5,9 @@ using UnityEngine;
 public class BaseAttack : MonoBehaviour
 {
     [SerializeField]
-    protected Transform cannonTower;
+    protected Transform tower;
+    [SerializeField]
+    protected Transform cannon;
     [SerializeField]
     protected Transform spawnProjectilePoint;
     [SerializeField]

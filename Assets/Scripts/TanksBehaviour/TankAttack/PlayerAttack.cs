@@ -32,10 +32,16 @@ public class PlayerAttack : BaseAttack, IAttackable
         inputHorizontalRotation = Input.GetAxis("Horizontal");
         inputVerticalRotation = Input.GetAxis("Vertical");
 
-        cannonTower.rotation = Quaternion.Euler(
-                cannonTower.rotation.eulerAngles.x + (inputVerticalRotation * cannonRotationSpeed),
-                cannonTower.rotation.eulerAngles.y + (inputHorizontalRotation * cannonRotationSpeed),
-                cannonTower.rotation.eulerAngles.z
+        tower.rotation = Quaternion.Euler(
+                tower.rotation.eulerAngles.x,
+                tower.rotation.eulerAngles.y + (inputHorizontalRotation * cannonRotationSpeed),
+                tower.rotation.eulerAngles.z
+            );
+
+        cannon.rotation = Quaternion.Euler(
+                cannon.rotation.eulerAngles.x + (inputVerticalRotation * cannonRotationSpeed),
+                cannon.rotation.eulerAngles.y,
+                cannon.rotation.eulerAngles.z
             );
     }
 

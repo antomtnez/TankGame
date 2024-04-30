@@ -16,18 +16,17 @@ public class ProjectileBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) 
     {
+        Debug.Log($"Collision with {other.gameObject.name} ocurred at: {other.contacts[0].point}");
         if((layerToDamage.value & (1 << other.gameObject.layer)) != 0)
         {
             try {
                 GameObject fx = Instantiate(tankCollisionFXprefab, other.contacts[0].point, Quaternion.identity);
                 other.gameObject.GetComponent<IDamagable>().TakeDamage(damageValue);
                 Destroy(fx, 3f);
-            }catch(Exception e)
-            {
+            }catch(Exception e){
                 Debug.Log($"ProjectileBehaviour is trying to access IDamagable inteface of {other.gameObject.name}. Exception: {e}");
             }
-        }else
-        {
+        }else{
             GameObject fx = Instantiate(otherCollisionFXprefab, other.contacts[0].point, Quaternion.identity);
             Destroy(fx, 3f);
         }

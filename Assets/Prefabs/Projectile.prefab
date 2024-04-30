@@ -149,6 +149,6 @@ MonoBehaviour:
   damageValue: 1
   layerToDamage:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 1
   tankCollisionFXprefab: {fileID: 4073066531869866044, guid: 197a671124edf5146a7e0b378d04b4e6, type: 3}
   otherCollisionFXprefab: {fileID: 6222955288363289509, guid: ccfc2cb10a00791428072b8ccb044f30, type: 3}

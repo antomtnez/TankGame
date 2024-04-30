@@ -19,7 +19,7 @@ public class AIMove : BaseMove, IMovable
                 do{
                     Vector2 randomPointInMaxRange = UnityEngine.Random.insideUnitCircle * maxRangeToMove;
                     randomPoint = transform.position + new Vector3(randomPointInMaxRange.x, 0f, randomPointInMaxRange.y);
-                }while (Vector3.Distance(randomPoint, target.position) > minDistanceToTarget);
+                }while (Vector3.Distance(randomPoint, target.position) < minDistanceToTarget);
 
                 agent.SetDestination(randomPoint);
                 hasNewDestination = true;
