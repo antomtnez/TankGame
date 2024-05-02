@@ -11,6 +11,11 @@ public class PlayerAttack : BaseAttack, IAttackable
     private bool isChargingShot = false;
     private bool canMove = true;
 
+    private bool IsOutOfProjectiles()
+    {
+        return projectileAmount > 0;
+    }
+
     public void Attack()
     {
         if(!trajectoryLine.gameObject.activeSelf)
@@ -68,6 +73,7 @@ public class PlayerAttack : BaseAttack, IAttackable
         GameObject projectile = ProjectilePool.Instance.GetObject();
         SetupProjectile(projectile);
         LaunchProjectile(projectile);
+        projectileAmount--;
 
         ResetCannonState();
     }

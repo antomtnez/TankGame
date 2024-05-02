@@ -8,6 +8,8 @@ public class AIAttack : BaseAttack, IAttackable
     [SerializeField]
     private float maxLaunchAngle = 45f;
     [SerializeField]
+    private float maxLaunchVelocity = 10f;
+    [SerializeField]
     private float maxErrorMagnitude = 0.1f;
     [SerializeField]
     private float maxDistanceForError = 100f;
@@ -17,12 +19,17 @@ public class AIAttack : BaseAttack, IAttackable
         return target != null;
     }
 
+    private bool IsOutOfProjectiles()
+    {
+        return projectileAmount > 0;
+    }
+
     public void Attack()
     {
         if(target == null) 
             target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        if (IsReadyToAttack())
+        if (IsReadyToAttack() && !IsOutOfProjectiles())
             StartCoroutine(Shoot());
     }
 
@@ -37,23 +44,27 @@ public class AIAttack : BaseAttack, IAttackable
         FireAtTarget();
     }
 
-    private void RotateTower(){
+    private void RotateTower()
+    {
         Vector3 targetPosition = target.position + CalculateAimErrorOffset();
 
         Vector3 horizontalDirection = new Vector3(targetPosition.x - tower.position.x, 0, targetPosition.z - tower.position.z);
         tower.LookAt(tower.position + horizontalDirection);
     }
 
-    void FireAtTarget(){
+    void FireAtTarget()
+    {
         Vector3 targetPosition = target.position + CalculateAimErrorOffset();
         float targetAngle;
         
         // Calcular el ángulo y la velocidad del lanzamiento necesario
         float missileVelocity = CalculateLaunchVelocity(targetPosition, out targetAngle);
         
-        if (missileVelocity > 0 && targetAngle != float.NaN){
+        if (missileVelocity > 0 && targetAngle != float.NaN)
+        {
             cannon.localEulerAngles = new Vector3(-targetAngle, 0, 0);
             FireProjectile(missileVelocity);
+            projectileAmount--;
             Debug.Log("Fired at angle: " + targetAngle + " with velocity: " + missileVelocity);
         }
         else
@@ -62,7 +73,8 @@ public class AIAttack : BaseAttack, IAttackable
         }
     }
 
-    private Vector3 CalculateAimErrorOffset(){
+    private Vector3 CalculateAimErrorOffset()
+    {
         float distanceToTarget = Vector3.Distance(transform.position, target.position);
         float errorRatio = Mathf.Clamp(distanceToTarget / maxDistanceForError, 0f, 1f);
         float errorMagnitude = errorRatio * maxErrorMagnitude;
@@ -70,7 +82,8 @@ public class AIAttack : BaseAttack, IAttackable
         return (UnityEngine.Random.insideUnitSphere * errorMagnitude);
     }
 
-    float CalculateLaunchVelocity(Vector3 targetPosition, out float launchAngle){
+    float CalculateLaunchVelocity(Vector3 targetPosition, out float launchAngle)
+    {
         float g = Physics.gravity.magnitude;
         float y = targetPosition.y - spawnProjectilePoint.transform.position.y; // Diferencia de altura
         float x = Mathf.Sqrt(Mathf.Pow(targetPosition.x - spawnProjectilePoint.transform.position.x, 2) + Mathf.Pow(targetPosition.z - spawnProjectilePoint.transform.position.z, 2)); // Distancia horizontal
@@ -80,20 +93,24 @@ public class AIAttack : BaseAttack, IAttackable
         // Fórmula para calcular la velocidad inicial necesaria para un lanzamiento parabólico
         float v = Mathf.Sqrt(g * x * x / (2 * Mathf.Cos(angleRadians) * Mathf.Cos(angleRadians) * (x * Mathf.Tan(angleRadians) - y)));
         
-        if (!float.IsNaN(v) && !float.IsInfinity(v)){
+        if (!float.IsNaN(v) && !float.IsInfinity(v))
+        {
             launchAngle = maxLaunchAngle;
             return v;
-        }else{
+        }
+        else
+        {
             launchAngle = 0;
             return 0; // No es posible alcanzar el objetivo
         }
     }
 
-    private void FireProjectile(float velocity){
+    private void FireProjectile(float velocity)
+    {
         GameObject projectile = ProjectilePool.Instance.GetObject();
         projectile.transform.position = spawnProjectilePoint.position;
 
         Rigidbody missileRb = projectile.GetComponent<Rigidbody>();
-        missileRb.velocity = cannon.forward * velocity;
+        missileRb.velocity = cannon.forward * Mathf.Clamp(velocity, 1f, maxLaunchVelocity);
     }
 }

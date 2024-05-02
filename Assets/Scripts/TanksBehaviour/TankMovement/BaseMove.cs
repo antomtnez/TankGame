@@ -4,8 +4,8 @@ using UnityEngine.AI;
 
 public class BaseMove : MonoBehaviour
 {
-    [SerializeField]
     protected NavMeshAgent agent;
+    [SerializeField]
     protected int maxRangeToMove = 10;
     protected bool hasNewDestination = false;
 

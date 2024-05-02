@@ -25,5 +25,6 @@ public class PlayerAttackTurn : ApplicationState
     public override void UpdateState()
     {
         ApplicationManager.GameManager.PlayerAttack();
+        if(Input.GetKeyDown(KeyCode.Q)) ApplicationManager.Instance.ChangeToNextState();
     }
 }

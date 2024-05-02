@@ -17,6 +17,9 @@ public class BaseAttack : MonoBehaviour
     protected float maxShotForce = 400f;
     protected float currentShotForce;
 
+    protected int maxProjectileAmount = 5;
+    protected int projectileAmount = 0;
+
     [Header("DEBUG SETTINGS")]
     [SerializeField, Min(1)]
     protected float projectileMass = 30;

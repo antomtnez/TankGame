@@ -24,5 +24,7 @@ public class PlayerMoveTurn : ApplicationState
     {
         ApplicationManager.GameManager.PlayerMove();
         ApplicationManager.GameManager.IsPlayerMovementEnded();
+
+        if(Input.GetKeyDown(KeyCode.Q)) ApplicationManager.Instance.ChangeToNextState();
     }
 }
